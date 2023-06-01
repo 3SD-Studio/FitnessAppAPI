@@ -1,3 +1,7 @@
+using FitnessAPI.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,6 +19,15 @@ builder.Services.AddCors(options => {
         policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "http://localhost:3000");
     });
 });
+
+
+// Only for debuging purposes on local machine; 
+const string ConnectionString = "server=localhost;port=3306;database=fitnessapp;uid=root;password=FitnessApp123";
+
+
+builder.Services.AddDbContext<FitnessAppDBContext>(options => options.UseMySQL(
+    ConnectionString
+));
 
 var app = builder.Build();
 
