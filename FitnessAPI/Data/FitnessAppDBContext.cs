@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessAPI.Data {
-    public class FitnessAppDBContext : IdentityDbContext<FitnesAppUser, IdentityRole, string> {
-        public FitnessAppDBContext(DbContextOptions<FitnessAppDBContext> options) : base(options) { 
+    public class FitnessAppDbContext : IdentityDbContext<FitnesAppUser, IdentityRole, string> {
+        public FitnessAppDbContext(DbContextOptions<FitnessAppDbContext> options) : base(options) { 
         
         }
     }

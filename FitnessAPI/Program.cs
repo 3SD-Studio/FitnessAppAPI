@@ -16,16 +16,19 @@ builder.Services.AddCors(options => {
         // PORTS:
         // 4200 - ANGULAR CLIENT
         // 3000 - REACT CLIENT
-        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "http://localhost:3000");
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins(
+            "http://localhost:4200", "http://localhost:3000"
+        );
     });
 });
 
 
 // Only for debuging purposes on local machine; 
-const string ConnectionString = "server=localhost;port=3306;database=fitnessapp;uid=root;password=FitnessApp123";
+const string ConnectionString = 
+    "server=localhost;port=3306;database=fitnessapp;uid=root;password=FitnessApp123";
 
 
-builder.Services.AddDbContext<FitnessAppDBContext>(options => options.UseMySQL(
+builder.Services.AddDbContext<FitnessAppDbContext>(options => options.UseMySQL(
     ConnectionString
 ));
 

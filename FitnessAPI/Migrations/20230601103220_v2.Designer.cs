@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FitnessAPI.Migrations
 {
-    [DbContext(typeof(FitnessAppDBContext))]
+    [DbContext(typeof(FitnessAppDbContext))]
     [Migration("20230601103220_v2")]
     partial class v2
     {
