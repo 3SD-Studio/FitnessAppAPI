@@ -14,5 +14,10 @@ namespace FitnessAPI.Models {
         [Required]
         [ForeignKey("Workouts")]
         public Workout Workout { get;set; }
+
+        public int NumberOfSeries { get; set; }
+        public int RepeatInSeries { get; set; }
+
+
     }
 }

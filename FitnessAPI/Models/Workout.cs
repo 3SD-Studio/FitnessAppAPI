@@ -6,8 +6,15 @@ namespace FitnessAPI.Models {
     public class Workout {
         [Key]
         public int Id { get; set; }
+
         [Required]
-        List<ExerciseWorkout> Exercises{ get; set; }
+        [ForeignKey("OwnerId")]
+        public FitnessAppUser Owner { get; set; }
+
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+
+        public int Difficulty { get; set; }
 
     }
 }

@@ -3,6 +3,7 @@ using System;
 using FitnessAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessAPI.Migrations
 {
     [DbContext(typeof(FitnessAppDbContext))]
-    partial class FitnessAppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230723112456_final_schema_v2")]
+    partial class final_schema_v2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,13 +243,13 @@ namespace FitnessAPI.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("OwnerId")
+                    b.Property<string>("aspnetusers")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("aspnetusers");
 
                     b.ToTable("Workouts");
                 });
@@ -490,7 +493,7 @@ namespace FitnessAPI.Migrations
                 {
                     b.HasOne("FitnessAPI.Models.FitnessAppUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("aspnetusers")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

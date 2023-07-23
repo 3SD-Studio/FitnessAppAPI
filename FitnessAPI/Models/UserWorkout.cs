@@ -7,7 +7,10 @@ namespace FitnessAPI.Models {
         [Key]
         public int Id { get; set; }
         public DateTime Date {get; set; }
+
+        [ForeignKey("UserId")]
         public FitnessAppUser User { get; set; }
+        [ForeignKey("WorkoutId")]
         public Workout Workout { get; set; }
     }
 }
