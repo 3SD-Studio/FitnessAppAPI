@@ -4,7 +4,7 @@ public class Exercise {
 
     [ForeignKey("Owner")]
     [Required]
-    public FitnessAppUser Owner { get; set; }
+    public User Owner { get; set; }
     
     public ICollection<Ratinge> Ratings {get;}  = new List<Ratinge>();
     public ICollection<Workout> Workouts {get;} = new List<Workout>();
@@ -23,7 +23,7 @@ public class Ratinge {
 
     [Required]
     [ForeignKey("Creator")]
-    public FitnessAppUser User { get; set; }
+    public User User { get; set; }
 
     //[Required]
     //[ForeignKey("Exercises")]
@@ -41,11 +41,11 @@ public class Ratinge {
 
     //[Required]
     //[ForeignKey("Owner")]
-    public FitnessAppUser Owner { get; set; }
+    public User Owner { get; set; }
 
     public ICollection<Ratingw> Ratings {get;} = new List <Ratingw>();
     public ICollection<Exercise> Exercises {get;} = new List<Exercise>();
-    public ICollection<FitnessAppUser> Users {get; } = new List<FitnessAppUser>();
+    public ICollection<User> Users {get; } = new List<User>();
 
     public string? Name { get; set; }
     public string? Description { get; set; }
@@ -59,7 +59,7 @@ public class Ratingw {
     
     //[Required]
     //[ForeignKey("Creator")]
-    public FitnessAppUser User { get; set; }
+    public User User { get; set; }
 
     //[Required]
     //[ForeignKey("Workouts")]
@@ -82,7 +82,7 @@ public class ExerciseWorkout {
     public int RepeatInSeries { get; set; }
 }
 
- public class FitnessAppUser : IdentityUser {
+ public class User : IdentityUser {
     public DateTime? DateOfBirth { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
@@ -105,8 +105,8 @@ public class MusclesGroup {
 }
 
 
-public class WorkoutFitnessAppUser {
-    public FitnessAppUser User { get; set; }
+public class WorkoutUser {
+    public User User { get; set; }
     public Workout Workout { get; set; }
 
     public DateTime Date {get; set; }
