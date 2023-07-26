@@ -1,0 +1,113 @@
+public class Exercise {
+    [Key]
+    public int Id { get; set; }
+
+    [ForeignKey("Owner")]
+    [Required]
+    public FitnessAppUser Owner { get; set; }
+    
+    public ICollection<Ratinge> Ratings {get;}  = new List<Ratinge>();
+    public ICollection<Workout> Workouts {get;} = new List<Workout>();
+    public ICollection<MusclesGroup> MusclesGroups {get;} = new List<Workout>();
+
+    [Required]
+    public string? Name { get; set; } 
+    public string? Description { get; set; }
+    [Required]
+    public int Difficulty { get; set; }
+}
+
+public class Ratinge {
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    [ForeignKey("Creator")]
+    public FitnessAppUser User { get; set; }
+
+    //[Required]
+    //[ForeignKey("Exercises")]
+    public Exercise Exercise { get; set; }
+
+    public string Comment { get; set; } 
+    public int Stars { get; set; }
+    public DateTime Date { get; set; }
+ }
+
+
+ public class Workout {
+    [Key]
+    public int Id { get; set; }
+
+    //[Required]
+    //[ForeignKey("Owner")]
+    public FitnessAppUser Owner { get; set; }
+
+    public ICollection<Ratingw> Ratings {get;} = new List <Ratingw>();
+    public ICollection<Exercise> Exercises {get;} = new List<Exercise>();
+    public ICollection<FitnessAppUser> Users {get; } = new List<FitnessAppUser>();
+
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public int Difficulty { get; set; }
+
+}
+
+public class Ratingw {
+    [Key]
+    public int Id { get; set; }
+    
+    //[Required]
+    //[ForeignKey("Creator")]
+    public FitnessAppUser User { get; set; }
+
+    //[Required]
+    //[ForeignKey("Workouts")]
+    public Workout Workout { get; set; }
+        
+    public string Comment { get; set; }
+    public int Stars { get; set; }
+    public DateTime Date { get; set; }
+}
+
+public class ExerciseWorkout {
+    //[Required]
+    //[ForeignKey("Exercises")]
+    public Exercise Exercise { get; set; }
+    //[Required]
+    //[ForeignKey("Workouts")]
+    public Workout Workout { get;set; }
+
+    public int NumberOfSeries { get; set; }
+    public int RepeatInSeries { get; set; }
+}
+
+ public class FitnessAppUser : IdentityUser {
+    public DateTime? DateOfBirth { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+
+    public ICollection<Ratinge> WrittenExerciseRatings {get; } =  new List<Ratinge>();
+    public ICollection<Ratingw> WrittenWorkoutRatings  {get; } =  new List<Ratingw>();
+    
+    public ICollection<Workout> PlanedWorkouts  {get; } =  new List<Workout>();
+    public ICollection<Workout> OwnedWorkouts  {get; } =  new List<Workout>();
+}
+
+
+public class MusclesGroup {
+    [Key]
+    public int Id { get; set; }
+    public int Name { get; set; }
+    public string? Description { get; set; }
+
+    public ICollection<Exercise> Exercises {get;} = new List<Exercise>();
+}
+
+
+public class WorkoutFitnessAppUser {
+    public FitnessAppUser User { get; set; }
+    public Workout Workout { get; set; }
+
+    public DateTime Date {get; set; }
+}
