@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessAPI.Migrations
 {
     [DbContext(typeof(FitnessAppDbContext))]
-    partial class FitnessAppDBContextModelSnapshot : ModelSnapshot
+    partial class FitnessAppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -18,6 +18,36 @@ namespace FitnessAPI.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("ExerciseMusclesGroup", b =>
+                {
+                    b.Property<int>("ExercisesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MusclesGroupsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExercisesId", "MusclesGroupsId");
+
+                    b.HasIndex("MusclesGroupsId");
+
+                    b.ToTable("ExerciseMusclesGroup");
+                });
+
+            modelBuilder.Entity("ExerciseWorkout", b =>
+                {
+                    b.Property<int>("ExercisesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WorkoutsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExercisesId", "WorkoutsId");
+
+                    b.HasIndex("WorkoutsId");
+
+                    b.ToTable("ExerciseWorkout");
+                });
 
             modelBuilder.Entity("FitnessAPI.Models.Exercise", b =>
                 {
@@ -35,18 +65,62 @@ namespace FitnessAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("aspnetusers")
+                    b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("aspnetusers");
+                    b.HasIndex("OwnerId");
 
-                    b.ToTable("Exercises");
+                    b.ToTable("Exercise");
                 });
 
-            modelBuilder.Entity("FitnessAPI.Models.ExerciseRating", b =>
+            modelBuilder.Entity("FitnessAPI.Models.ExerciseWorkoutCustom", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Exercise")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberOfSeries")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RepeatInSeries")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Workout")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Exercise");
+
+                    b.HasIndex("Workout");
+
+                    b.ToTable("ExerciseWorkoutCustom");
+                });
+
+            modelBuilder.Entity("FitnessAPI.Models.MusclesGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Name")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MusclesGroup");
+                });
+
+            modelBuilder.Entity("FitnessAPI.Models.Ratinge", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,53 +133,57 @@ namespace FitnessAPI.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Exercises")
+                    b.Property<int>("ExerciseId")
                         .HasColumnType("int");
 
                     b.Property<int>("Stars")
                         .HasColumnType("int");
 
-                    b.Property<string>("aspnetusers")
-                        .IsRequired()
+                    b.Property<string>("UserId")
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Exercises");
+                    b.HasIndex("ExerciseId");
 
-                    b.HasIndex("aspnetusers");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("ExerciseRatings");
+                    b.ToTable("Ratinge");
                 });
 
-            modelBuilder.Entity("FitnessAPI.Models.ExerciseWorkout", b =>
+            modelBuilder.Entity("FitnessAPI.Models.Ratingw", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("Exercises")
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Stars")
                         .HasColumnType("int");
 
-                    b.Property<int>("NumberOfSeries")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("RepeatInSeries")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Workouts")
+                    b.Property<int>("WorkoutId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Exercises");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("Workouts");
+                    b.HasIndex("WorkoutId");
 
-                    b.ToTable("ExercisesWorkouts");
+                    b.ToTable("Ratingw");
                 });
 
-            modelBuilder.Entity("FitnessAPI.Models.FitnessAppUser", b =>
+            modelBuilder.Entity("FitnessAPI.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -178,53 +256,6 @@ namespace FitnessAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("FitnessAPI.Models.MusclesGroups", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("ExerciseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Name")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExerciseId");
-
-                    b.ToTable("MusclesGroups");
-                });
-
-            modelBuilder.Entity("FitnessAPI.Models.UserWorkout", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("WorkoutId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("WorkoutId");
-
-                    b.ToTable("UsersWorkouts");
-                });
-
             modelBuilder.Entity("FitnessAPI.Models.Workout", b =>
                 {
                     b.Property<int>("Id")
@@ -240,47 +271,34 @@ namespace FitnessAPI.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("Workouts");
+                    b.ToTable("Workout");
                 });
 
-            modelBuilder.Entity("FitnessAPI.Models.WorkoutRating", b =>
+            modelBuilder.Entity("FitnessAPI.Models.WorkoutUserCustom", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Stars")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WorkoutID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("apsnetuser")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<int>("Workout")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkoutID");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("apsnetuser");
+                    b.HasIndex("Workout");
 
-                    b.ToTable("WorkoutRatings");
+                    b.ToTable("WorkoutUserCustom");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -411,72 +429,108 @@ namespace FitnessAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("UserWorkout", b =>
+                {
+                    b.Property<string>("UsersId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("WorkoutsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UsersId", "WorkoutsId");
+
+                    b.HasIndex("WorkoutsId");
+
+                    b.ToTable("UserWorkout");
+                });
+
+            modelBuilder.Entity("ExerciseMusclesGroup", b =>
+                {
+                    b.HasOne("FitnessAPI.Models.Exercise", null)
+                        .WithMany()
+                        .HasForeignKey("ExercisesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FitnessAPI.Models.MusclesGroup", null)
+                        .WithMany()
+                        .HasForeignKey("MusclesGroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ExerciseWorkout", b =>
+                {
+                    b.HasOne("FitnessAPI.Models.Exercise", null)
+                        .WithMany()
+                        .HasForeignKey("ExercisesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FitnessAPI.Models.Workout", null)
+                        .WithMany()
+                        .HasForeignKey("WorkoutsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FitnessAPI.Models.Exercise", b =>
                 {
-                    b.HasOne("FitnessAPI.Models.FitnessAppUser", "Owner")
+                    b.HasOne("FitnessAPI.Models.User", "Owner")
                         .WithMany()
-                        .HasForeignKey("aspnetusers")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("FitnessAPI.Models.ExerciseRating", b =>
+            modelBuilder.Entity("FitnessAPI.Models.ExerciseWorkoutCustom", b =>
                 {
-                    b.HasOne("FitnessAPI.Models.Exercise", "Exercise")
+                    b.HasOne("FitnessAPI.Models.Exercise", "Exercises")
                         .WithMany()
-                        .HasForeignKey("Exercises")
+                        .HasForeignKey("Exercise")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FitnessAPI.Models.FitnessAppUser", "User")
+                    b.HasOne("FitnessAPI.Models.Workout", "Workouts")
                         .WithMany()
-                        .HasForeignKey("aspnetusers")
+                        .HasForeignKey("Workout")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Exercises");
+
+                    b.Navigation("Workouts");
+                });
+
+            modelBuilder.Entity("FitnessAPI.Models.Ratinge", b =>
+                {
+                    b.HasOne("FitnessAPI.Models.Exercise", "Exercise")
+                        .WithMany("Ratings")
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FitnessAPI.Models.User", "User")
+                        .WithMany("WrittenExerciseRatings")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Exercise");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FitnessAPI.Models.ExerciseWorkout", b =>
+            modelBuilder.Entity("FitnessAPI.Models.Ratingw", b =>
                 {
-                    b.HasOne("FitnessAPI.Models.Exercise", "Exercise")
-                        .WithMany()
-                        .HasForeignKey("Exercises")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FitnessAPI.Models.Workout", "Workout")
-                        .WithMany()
-                        .HasForeignKey("Workouts")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Exercise");
-
-                    b.Navigation("Workout");
-                });
-
-            modelBuilder.Entity("FitnessAPI.Models.MusclesGroups", b =>
-                {
-                    b.HasOne("FitnessAPI.Models.Exercise", null)
-                        .WithMany("MusclesGroups")
-                        .HasForeignKey("ExerciseId");
-                });
-
-            modelBuilder.Entity("FitnessAPI.Models.UserWorkout", b =>
-                {
-                    b.HasOne("FitnessAPI.Models.FitnessAppUser", "User")
-                        .WithMany()
+                    b.HasOne("FitnessAPI.Models.User", "User")
+                        .WithMany("WrittenWorkoutRatings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FitnessAPI.Models.Workout", "Workout")
-                        .WithMany()
+                        .WithMany("Ratings")
                         .HasForeignKey("WorkoutId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -486,34 +540,23 @@ namespace FitnessAPI.Migrations
                     b.Navigation("Workout");
                 });
 
-            modelBuilder.Entity("FitnessAPI.Models.Workout", b =>
+            modelBuilder.Entity("FitnessAPI.Models.WorkoutUserCustom", b =>
                 {
-                    b.HasOne("FitnessAPI.Models.FitnessAppUser", "Owner")
+                    b.HasOne("FitnessAPI.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("FitnessAPI.Models.WorkoutRating", b =>
-                {
-                    b.HasOne("FitnessAPI.Models.Workout", "Workout")
+                    b.HasOne("FitnessAPI.Models.Workout", "Workouts")
                         .WithMany()
-                        .HasForeignKey("WorkoutID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FitnessAPI.Models.FitnessAppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("apsnetuser")
+                        .HasForeignKey("Workout")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
 
-                    b.Navigation("Workout");
+                    b.Navigation("Workouts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -527,7 +570,7 @@ namespace FitnessAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("FitnessAPI.Models.FitnessAppUser", null)
+                    b.HasOne("FitnessAPI.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -536,7 +579,7 @@ namespace FitnessAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("FitnessAPI.Models.FitnessAppUser", null)
+                    b.HasOne("FitnessAPI.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -551,7 +594,7 @@ namespace FitnessAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FitnessAPI.Models.FitnessAppUser", null)
+                    b.HasOne("FitnessAPI.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -560,16 +603,43 @@ namespace FitnessAPI.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("FitnessAPI.Models.FitnessAppUser", null)
+                    b.HasOne("FitnessAPI.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("UserWorkout", b =>
+                {
+                    b.HasOne("FitnessAPI.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FitnessAPI.Models.Workout", null)
+                        .WithMany()
+                        .HasForeignKey("WorkoutsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FitnessAPI.Models.Exercise", b =>
                 {
-                    b.Navigation("MusclesGroups");
+                    b.Navigation("Ratings");
+                });
+
+            modelBuilder.Entity("FitnessAPI.Models.User", b =>
+                {
+                    b.Navigation("WrittenExerciseRatings");
+
+                    b.Navigation("WrittenWorkoutRatings");
+                });
+
+            modelBuilder.Entity("FitnessAPI.Models.Workout", b =>
+                {
+                    b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618
         }

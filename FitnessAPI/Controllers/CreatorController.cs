@@ -8,8 +8,9 @@ namespace FitnessAPI.Controllers
     {
         // GET
         [HttpGet]
-        public IEnumerable<string> Get() {
-            return new List<string>();
+        public IEnumerable<string> Get()
+        {
+            return new List<string>{"debil"};
         }
         
         //
