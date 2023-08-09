@@ -8,7 +8,7 @@ namespace FitnessAPI.Models {
 
         public ICollection<Ratinge> WrittenExerciseRatings { get; } = new List<Ratinge>();
         public ICollection<Ratingw> WrittenWorkoutRatings { get; } = new List<Ratingw>();
-        public ICollection<Workout> Workouts { get; } = new List<Workout>();
+        public ICollection<WorkoutUserCustom> WorkoutUser { get; } = new List<WorkoutUserCustom>();
 
         //public ICollection<Workout> OwnedWorkouts { get; } = new List<Workout>();
     }

@@ -13,7 +13,7 @@ namespace FitnessAPI.Models {
         public User Owner { get; set; }
 
         public ICollection<Ratinge> Ratings { get; } = new List<Ratinge>();
-        public ICollection<Workout> Workouts { get; } = new List<Workout>();
+        public ICollection<ExerciseWorkoutCustom> ExerciseWorkout = new List<ExerciseWorkoutCustom>();
         public ICollection<MusclesGroup> MusclesGroups { get; } = new List<MusclesGroup>();
 
         [Required]
