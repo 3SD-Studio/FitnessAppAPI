@@ -72,18 +72,7 @@ namespace FitnessAPI.Controllers {
         [HttpGet("{id}")]
         public WorkoutDTO Get(int id) {
             
-            var exercises = _dbContext.ExerciseWorkoutCustom
-                .Select(e => e)
-                .Where(entity => entity.Workouts.Id == id)
-                .Select(entity => new ExercisesForWorkoutDTO() {
-                    Id = entity.Exercises.Id,
-                    Name = entity.Exercises.Name,
-                    NumberOfSeries = entity.NumberOfSeries,
-                    RepeatInSeries = entity.RepeatInSeries,
-                })
-                .ToList();
-
-
+            var exercises =  GetExercisesForWorkout(id);
             var workout = _dbContext.Workout.Find(id);
 
             if (workout == null) {
@@ -104,16 +93,14 @@ namespace FitnessAPI.Controllers {
         // POST api/<WorkoutController>
         [HttpPost]
         public void Post([FromBody] WorkoutDTO value) {
-            var newWorkout = new Workout()
-            {
+            var newWorkout = new Workout() {
                 Name = value.Name,
                 Description = value.Description,
                 Difficulty = value.Difficulty,
             };
             _dbContext.Add<Workout>(newWorkout);
 
-            foreach (var tempExercise in value.ExerciseIDs)
-            {
+            foreach (var tempExercise in value.ExerciseIDs) {
                 try {
                     var exercise = _dbContext.Exercise.First(exercise => exercise.Id == tempExercise.Id);
                     var newExerciseWorkout = new ExerciseWorkoutCustom()
