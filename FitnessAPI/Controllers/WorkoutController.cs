@@ -13,7 +13,15 @@ namespace FitnessAPI.Controllers {
         public int NumberOfSeries { get; set; }
         public int RepeatInSeries { get; set; }
         public string? Name { get; set; }
+    }
 
+    public class RatingForWorkoutDTO {
+        public int Id { get; set; }
+        public string UserID { get; set; }
+        public string Username { get; set; }
+        public DateTime CreationTime { get; set; }
+        public int Stars { get; set; }
+        public string Comment { get; set; }
     }
 
     public class WorkoutDTO {
@@ -21,7 +29,8 @@ namespace FitnessAPI.Controllers {
         public string? Name { get; set; }
         public string? Description { get; set; }
         public int Difficulty { get; set; }
-        public IEnumerable<ExercisesForWorkoutDTO> ExerciseIDs { get; set; } = new List<ExercisesForWorkoutDTO>();
+        public IEnumerable<ExercisesForWorkoutDTO> Exercises { get; set; } = new List<ExercisesForWorkoutDTO>();
+        public IEnumerable<RatingForWorkoutDTO> Ratings { get; set; } = new List<RatingForWorkoutDTO>();
     }
 
 
@@ -48,6 +57,22 @@ namespace FitnessAPI.Controllers {
                 .ToList();
         }
 
+        private IEnumerable<RatingForWorkoutDTO> GetRatingsForWorkout(int workoutId) {
+            return _dbContext.WorkoutRating
+                .Select(r => r)
+                .Where(r => r.Workout.Id == workoutId)
+                .Select(r => new RatingForWorkoutDTO()
+                {
+                    Id = r.Id,
+                    UserID = r.User.Id, 
+                    Username = r.User.UserName,
+                    CreationTime = r.Date,
+                    Stars = r.Stars,
+                    Comment = r.Comment
+                }).ToList();
+
+        }
+
         // GET: api/<WorkoutController>
         [HttpGet]
         public IEnumerable<WorkoutDTO> Get() {
@@ -57,22 +82,25 @@ namespace FitnessAPI.Controllers {
                 Name = w.Name,
                 Description = w.Description,
                 Difficulty = w.Difficulty,
-                ExerciseIDs = null
-
+                Exercises = null,
+                Ratings = null,
             }).ToList();
 
             foreach (var workout in result) {
-                workout.ExerciseIDs = GetExercisesForWorkout(workout.Id);
+                workout.Exercises = GetExercisesForWorkout(workout.Id);
+                workout.Ratings = GetRatingsForWorkout(workout.Id);
             }
 
             return result;
         }
 
+       
         // GET api/<WorkoutController>/5
         [HttpGet("{id}")]
         public WorkoutDTO Get(int id) {
             
             var exercises =  GetExercisesForWorkout(id);
+            var ratings = GetRatingsForWorkout(id);
             var workout = _dbContext.Workout.Find(id);
 
             if (workout == null) {
@@ -85,7 +113,8 @@ namespace FitnessAPI.Controllers {
                 Name = workout.Name,
                 Description = workout.Description,
                 Difficulty = workout!.Difficulty,
-                ExerciseIDs = exercises
+                Exercises = exercises,
+                Ratings = ratings,
             };
 
         }
@@ -100,7 +129,7 @@ namespace FitnessAPI.Controllers {
             };
             _dbContext.Add<Workout>(newWorkout);
 
-            foreach (var tempExercise in value.ExerciseIDs) {
+            foreach (var tempExercise in value.Exercises) {
                 try {
                     var exercise = _dbContext.Exercise.First(exercise => exercise.Id == tempExercise.Id);
                     var newExerciseWorkout = new ExerciseWorkoutCustom()
