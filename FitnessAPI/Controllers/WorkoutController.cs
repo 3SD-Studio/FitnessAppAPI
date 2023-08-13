@@ -76,8 +76,7 @@ namespace FitnessAPI.Controllers {
         // GET: api/<WorkoutController>
         [HttpGet]
         public IEnumerable<WorkoutDTO> Get() {
-            var result =  _dbContext.Workout.Select(w => new WorkoutDTO()
-            {
+            var result =  _dbContext.Workout.Select(w => new WorkoutDTO() {
                 Id = w.Id,
                 Name = w.Name,
                 Description = w.Description,

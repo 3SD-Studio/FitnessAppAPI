@@ -9,13 +9,23 @@ namespace FitnessAPI.Controllers {
     // Data Transfer Object
     // Defines how data will be sent between API and client
     // Doesn't contain any logic
+    public class RatingForExerciseDTO {
+        public int Id { get; set; }
+        public string UserID { get; set; }
+        public string Username { get; set; }
+        public DateTime CreationTime { get; set; }
+        public int Stars { get; set; }
+        public string Comment { get; set; }
+    }
     public class ExerciseDTO {
         public int Id { get; set; }
         public string? OwnerId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public int Difficulty { get; set; }
+        public IEnumerable<RatingForExerciseDTO> Ratings { get; set; } = new List<RatingForExerciseDTO>();
     }
+
 
     [Route("api/[controller]")]
     [ApiController]
@@ -26,22 +36,47 @@ namespace FitnessAPI.Controllers {
             _dbContext = dbContext;
         }
 
+        private IEnumerable<RatingForExerciseDTO> GetRatingsForExercise(int exerciseId) {
+            return _dbContext.ExerciseRating
+                .Select(r => r)
+                .Where(r => r.Exercise.Id == exerciseId)
+                .Select(r => new RatingForExerciseDTO()
+                {
+                    Id = r.Id,
+                    UserID = r.User.Id,
+                    Username = r.User.UserName,
+                    CreationTime = r.Date,
+                    Stars = r.Stars,
+                    Comment = r.Comment
+                }).ToList();
+        }
+
         // GET: api/<ExerciseController>
         [HttpGet]
         public IEnumerable<ExerciseDTO> Get() {
-            return _dbContext.Exercise.Select(exercise => new ExerciseDTO {
+            var result = _dbContext.Exercise.Select(exercise => new ExerciseDTO {
                 Id = exercise!.Id,
                 OwnerId = exercise!.Owner.Id,
                 Description = exercise.Description,
                 Difficulty = exercise.Difficulty,
-                Name = exercise.Name
+                Name = exercise.Name,
+                Ratings = null
             }).ToList();
+
+            foreach (var exercise in result)
+            {
+                exercise.Ratings = GetRatingsForExercise(exercise.Id);
+            }
+
+            return result;
         }
 
         // GET api/<ExerciseController>/5
         [HttpGet("{id}")]
         public ExerciseDTO Get(int id) {
-            try {
+            try
+            {
+                var ratings = GetRatingsForExercise(id);
                 var exercise = _dbContext.Exercise.Find(id);
                 // Use to load Owner 
                 _dbContext.Entry(exercise).Reference(e => e.Owner).Load();
@@ -51,7 +86,8 @@ namespace FitnessAPI.Controllers {
                     OwnerId = exercise!.Owner.Id,
                     Description = exercise.Description,
                     Difficulty = exercise.Difficulty,
-                    Name = exercise.Name
+                    Name = exercise.Name,
+                    Ratings = ratings
                 };
 
                 return result;
@@ -90,13 +126,12 @@ namespace FitnessAPI.Controllers {
         // DELETE api/<ExerciseController>/5
         [HttpDelete("{id}")]
         public void Delete(int id) {
-            try {
-                Exercise? toRemove = _dbContext.Exercise.Find(id);
+            Exercise? toRemove = _dbContext.Exercise.Find(id);
+
+            if (toRemove != null)
+            {
                 _dbContext.Exercise.Remove(toRemove!);
                 _dbContext.SaveChanges();
-            } 
-            catch (Exception exception) {
-                Response.StatusCode = 404;
             }
         }
     }
